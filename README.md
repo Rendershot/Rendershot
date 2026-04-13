@@ -26,6 +26,7 @@ client.pdf_html_to_file("<h1>Invoice #1001</h1>", "invoice.pdf")
 | | |
 |---|---|
 | [![PyPI](https://img.shields.io/pypi/v/rendershot?label=rendershot&logo=python&logoColor=white)](https://pypi.org/project/rendershot/) | Python SDK &mdash; sync, async, and bulk rendering |
+| [![npm](https://img.shields.io/npm/v/rendershot?label=rendershot&logo=npm)](https://www.npmjs.com/package/rendershot) | Node.js SDK &mdash; native fetch, zero dependencies |
 | [![npm](https://img.shields.io/npm/v/@rendershot/mcp-server?label=@rendershot/mcp-server&logo=npm)](https://www.npmjs.com/package/@rendershot/mcp-server) | MCP server &mdash; use Rendershot from Claude, Cursor, and other AI agents |
 
 #### Use Cases
