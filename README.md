@@ -1,16 +1,37 @@
-## Hi there 👋
+### Screenshot & PDF Generation API
 
-<!--
-**Rendershot/Rendershot** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
+One REST call to render any URL or HTML to **PNG**, **JPEG**, or **PDF**.  
+Sub-2s renders. 99.9% uptime. Free tier included.
 
-Here are some ideas to get you started:
+**[rendershot.io](https://rendershot.io)** | **[Docs](https://rendershot.io/docs)** | **[Dashboard](https://rendershot.io/dashboard)**
 
-- 🔭 I’m currently working on ...
-- 🌱 I’m currently learning ...
-- 👯 I’m looking to collaborate on ...
-- 🤔 I’m looking for help with ...
-- 💬 Ask me about ...
-- 📫 How to reach me: ...
-- 😄 Pronouns: ...
-- ⚡ Fun fact: ...
--->
+---
+
+```python
+import rendershot
+
+client = rendershot.RenderShotClient(api_key="rs_...")
+
+# Screenshot any URL
+client.screenshot_url_to_file("https://example.com", "screenshot.png")
+
+# Generate a PDF from HTML
+client.pdf_html_to_file("<h1>Invoice #1001</h1>", "invoice.pdf")
+```
+
+---
+
+#### SDKs & Integrations
+
+| | |
+|---|---|
+| [![PyPI](https://img.shields.io/pypi/v/rendershot?label=rendershot&logo=python&logoColor=white)](https://pypi.org/project/rendershot/) | Python SDK &mdash; sync, async, and bulk rendering |
+| [![npm](https://img.shields.io/npm/v/@rendershot/mcp-server?label=@rendershot/mcp-server&logo=npm)](https://www.npmjs.com/package/@rendershot/mcp-server) | MCP server &mdash; use Rendershot from Claude, Cursor, and other AI agents |
+
+#### Use Cases
+
+PDF invoices &bull; OG images &bull; HTML reports &bull; Web screenshots &bull; Scheduled captures &bull; Visual regression in CI
+
+---
+
+<sub>Built in Tel Aviv &bull; [X/Twitter](https://x.com/RendershotIo)</sub>
