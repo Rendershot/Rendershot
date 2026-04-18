@@ -1,0 +1,77 @@
+name: Refresh SDK version badges
+
+# Appends &v=<latest> to each badge URL in README.md whenever a new version
+# lands on the registry. Changing the URL forces GitHub's camo image proxy
+# to refetch — otherwise badges stay stuck at the version that was live
+# the first time the README was rendered.
+
+on:
+  schedule:
+    - cron: '15 * * * *'  # hourly at :15
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Update README badges
+        run: |
+          python3 - <<'PY'
+          import json
+          import pathlib
+          import re
+          import urllib.parse
+          import urllib.request
+
+          def fetch(url):
+              with urllib.request.urlopen(url, timeout=15) as resp:
+                  return json.load(resp)
+
+          versions = {
+              'https://img.shields.io/pypi/v/rendershot':
+                  fetch('https://pypi.org/pypi/rendershot/json')['info']['version'],
+              'https://img.shields.io/npm/v/rendershot':
+                  fetch('https://registry.npmjs.org/rendershot/latest')['version'],
+              'https://img.shields.io/npm/v/@rendershot/mcp-server':
+                  fetch('https://registry.npmjs.org/@rendershot/mcp-server/latest')['version'],
+          }
+
+          def rewrite(match):
+              url = match.group(0)
+              for prefix, version in versions.items():
+                  if not url.startswith(prefix + '?') and url != prefix:
+                      continue
+                  parsed = urllib.parse.urlparse(url)
+                  params = [(k, v) for k, v in urllib.parse.parse_qsl(parsed.query) if k != 'v']
+                  params.append(('v', version))
+                  query = urllib.parse.urlencode(params, safe='@/')
+                  return parsed._replace(query=query).geturl()
+              return url
+
+          path = pathlib.Path('README.md')
+          original = path.read_text()
+          updated = re.sub(r'https://img\.shields\.io/[^\s)"]+', rewrite, original)
+
+          if updated != original:
+              path.write_text(updated)
+              print('README updated')
+          else:
+              print('No change')
+          PY
+
+      - name: Commit and push
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          if git diff --quiet; then
+            echo 'Nothing to commit'
+            exit 0
+          fi
+          git add README.md
+          git commit -m 'Refresh SDK version badges'
+          git push
